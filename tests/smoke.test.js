@@ -140,5 +140,19 @@ const before = D.ISLANDS.hiyoko.chests.map(c => c.x + ',' + c.y).join(' ');
 els.continueBtn.click(); step(5);
 ok(D.ISLANDS.hiyoko.chests.map(c => c.x + ',' + c.y).join(' ') === before && D.P.flags.head === 'ribbon' && D.P.opened[hc.id], 'セーブから つづける');
 
+// 11. 村の はいち：たてものの かべが 柵の 内がわで 道（はば 40）に かからない。村の かざりどうしが かさならない
+const segD = (px, py, a, b) => { const dx = b[0] - a[0], dy = b[1] - a[1], l = dx * dx + dy * dy, t = l ? Math.max(0, Math.min(1, ((px - a[0]) * dx + (py - a[1]) * dy) / l)) : 0; return Math.hypot(px - a[0] - dx * t, py - a[1] - dy * t); };
+for (const id in D.ISLANDS) {
+  const I = D.ISLANDS[id], road = (x, y) => Math.min(...I.roads.map(r => Math.min(...r.slice(1).map((p, i) => segD(x, y, r[i], p)))));
+  for (const v of I.villages) {
+    for (const b of v.buildings) for (let x = b.x - 67; x <= b.x + 67; x += 8) for (let y = b.y - 90; y <= b.y + 4; y += 8) {
+      if (Math.hypot(x - v.x, y - v.y) > v.r - 5 || road(x, y) < 22) { ok(false, 'たてものが 柵か 道に かかる ' + b.id); x = 1e9; break; }
+    }
+    const ds = I.decor.filter(d => Math.hypot(d.x - v.x, d.y - v.y) < v.r);
+    if (ds.some((a, i) => ds.some((c, j) => j > i && Math.abs(a.x - c.x) < 40 && Math.abs(a.y - c.y) < 90))) ok(false, '村の かざりが かさなる ' + v.id);
+  }
+}
+ok(true, '村の はいち');
+
 console.log(fails ? '\n失敗 ' + fails + ' 件' : '\nすべて OK');
 process.exitCode = fails ? 1 : 0;
