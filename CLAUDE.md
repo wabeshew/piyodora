@@ -8,6 +8,7 @@
 - `index.html` をブラウザで開くだけで動く。スマホ実機で確認するなら `npx serve .` などでローカルサーバーを立てる。
 - テスト：`node tests/smoke.test.js`（ブラウザ不要。全マップの描画、全ボス撃破、ポータル移動、復活、かくし宝箱ときせかえを確認する）
 - 外部依存は Google Fonts（Mochiy Pop One）だけ。オフラインでも代わりのフォントで動く。
+- 公開：GitHub Pages（https://wabeshew.github.io/piyodora/、リポジトリ wabeshew/piyodora の main の一番上）。`git push` するだけで1〜2分で反映される。公開リポジトリなので、コミットの作者は GitHub の noreply アドレスにしてある（このリポジトリの git config）。もとの PNG（`art/*.png`）は `.gitignore` で外している。
 
 ## 対象ユーザーと文言のルール
 
@@ -58,7 +59,7 @@
 - **モンスターの絵**：顔（目・口）のない「のっぺらぼう」の絵にして、顔は `drawFace()` で上に描く（目がひよこを追う、ねむる、目を回す、おこる、口を開けるを残すため）。絵を足したら `ENEMY_ART` に大きさと顔の位置を書く（r を 1 とした値。書いていない絵は使われず、コードの絵のまま）。横向きの絵は頭を右にして `side: true`。ボスの王冠もコードで描く。動きは、体ごとの動き（`move`：はねる・ふわふわ・ころがるなど）と、絵を帯に切ってずらす動き（`warp`、`WARPS` と `drawWarped()`：ヘビのうねり、イモムシのふし、クラゲの足、ほのおのちらちら）。足やはねの動きは、今はない。
 - **codex で絵を作るとき**：`codex exec --skip-git-repo-check --sandbox workspace-write -c model_reasoning_effort='"low"' -C <フォルダ> --image <見本.png> - < prompt.txt`（`--image` のあとに文章を書くと画像の名前とまちがえられるので、文章は標準入力でわたす）。見本に今の絵を1まい付け、「背景は完全に透明、影・地面・文字なし」「作って保存するだけ。確認やスクリプトは不要」と書くと、利用枠は1まい 0.3〜0.5%（5時間の枠）くらいですむ。
 - index.html は約1MB あり、Claude アプリの内蔵ブラウザでは file:// で開けない。確認するときは `.claude/launch.json` の piyodora（python の http.server）を使う。localhost:8765 には遊んだセーブが残っていることがあるので、はじめから あそぶ は押さない（試すときはセーブのキーを変えた写しを使う）。
-- Claude の公開ページ版とローカル版では保存場所が違うので、セーブデータは引き継がれない。
+- Claude の公開ページ版、GitHub Pages 版、ローカル版では保存場所が違うので、セーブデータは引き継がれない。
 
 ## これまでに入っている機能
 
